@@ -1,18 +1,34 @@
+# Docker Compose設定ファイルのバージョンを指定（3.8を使用）
 version: '3.8'
 
+# サービス定義の開始
 services:
+  # PostgreSQLデータベースサービス
   postgres:
+    # PostgreSQL 15の公式Dockerイメージを使用
     image: postgres:15
+    # コンテナに分かりやすい名前を設定
     container_name: postgres_db
+    # コンテナが停止した場合、手動停止以外は自動で再起動
     restart: unless-stopped
+    # 環境変数の設定
     environment:
+      # データベース名を環境変数から取得
       POSTGRES_DB: ${POSTGRES_DB}
+      # データベースユーザー名を環境変数から取得
       POSTGRES_USER: ${POSTGRES_USER}
+      # データベースパスワードを環境変数から取得
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # ポートマッピングの設定
     ports:
+      # ホストのポート（環境変数またはデフォルト5432）をコンテナの5432ポートにマッピング
       - "${POSTGRES_PORT:-5432}:5432"
+    # ボリュームマウントの設定
     volumes:
+      # PostgreSQLのデータディレクトリを永続化ボリュームにマウント
       - postgres_data:/var/lib/postgresql/data
 
+# ボリューム定義の開始
 volumes:
+  # PostgreSQLデータの永続化用ボリューム
   postgres_data:
